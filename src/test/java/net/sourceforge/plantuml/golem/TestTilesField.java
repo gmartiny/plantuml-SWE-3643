@@ -62,33 +62,66 @@ public class TestTilesField {
     @Test
     public void testPathAdded() {
         tilesField = new TilesField();
-        // setup positions map
-        Tile start = tilesField.getRoot();
-        Tile dest = new Tile(1);
-        TileGeometry startDirection = TileGeometry.EAST;
-        tilesField.createTile(start, startDirection);
-
+			  TileGeometry startDirection = TileGeometry.EAST;
+        start = tilesField.getRoot(); 
+        dest = new Tile(1);
+        tilesField.addPosition(dest, new Position(2, 0, 2, 1));
+			
+			  int initial = tilesField.getPaths().size();
+			
         tilesField.addPath(start, dest, startDirection);
+			  int after = tilesField.getPaths().size();
+			
+				assertEquals(initial + 1, after);
     }
 
     @Test
     public void testThrowsForNullStart() {
         tilesField = new TilesField();
+        start = tilesField.getRoot(); 
+        dest = new Tile(1);
+        tilesField.addPosition(dest, new Position(2, 0, 2, 1));
+				
+        assertThrows(NullPointerException.class, () -> {
+					tilesField.addPath(null, dest, TileGeometry.EAST);		
+				});
+				
     }
 
     @Test
     public void testThrowsForNullDestination() {
         tilesField = new TilesField();
+				Tile start = tilesField.getRoot();
+				Tile dest = null;
+			  TileGeometry startDirection = TileGeometry.EAST;
+			
+				assertThrows(NullPointerException.class, () -> {
+										 tilesField.addPath(start, dest, startDirection);
+		    });
     }
 
     @Test
     public void testThrowsForNullStartDirection() {
         tilesField = new TilesField();
+			  Tile start = tilesField.getRoot();
+				Tile dest = new Tile(1);
+			  tilesField.addPosition(dest, new Position(2, 0, 2, 1));
+			  TileGeometry startDirection = null;
+				assertThrows(NullPointerException.class, () -> {
+					tilesField.addPath(start, dest, startDirection);
+				});
     }
 
     @Test
     public void testThrowsForInvalidPath() {
         tilesField = new TilesField();
+        start = tilesField.getRoot(); 
+        dest = new Tile(1);
+        tilesField.addPosition(dest, new Position(2, 0, 2, 1));
+			  TileGeometry startDirection = TileGeometry.CENTER; 
+			  assertThrows(IllegalArgumentException.class, () -> {
+					tilesField.addPath(start, dest, startDirection);
+				});
     }
 
     // ============================================================================================
